@@ -19,6 +19,9 @@ app.use(express.json()); // allows res.body to work (express.json lets you read 
 app.use(express.urlencoded({ extended: false })); // allows you to read what the forms send over (by default, it's all encoded), just declare it
 app.use(methodOverride("_method"));
 
+// put, delete - need to use method override
+// get, post - dont need method override
+
 // =======================================
 //              DATABASE
 // =======================================
@@ -44,7 +47,7 @@ app.post("/seed", async (req, res) => {
 });
 
 //======================
-// CREATE - Post
+// CREATE - Post (New Requests)
 //======================
 
 app.post("/requests", async (req, res) => {
@@ -54,6 +57,36 @@ app.post("/requests", async (req, res) => {
     console.log(`There are ${data} tasks in this database`);
   });
 });
+
+//======================
+// CREATE - Post (Tasks - Change status to accepted)
+//======================
+
+app.post("/tasks", async (req, res) => {
+  await TaskModel.updateOne(
+    { _id: req.body.id },
+
+    {
+      status: req.body.status,
+    }
+  );
+  // res.redirect("http://localhost:3000/tasks");
+  res.json(req.body);
+});
+
+// app.post("/product/:id", async (req, res) => {
+//   await Product.updateOne(
+//     { _id: req.params.id },
+//     {
+//       name: req.body.name,
+//       description: req.body.description,
+//       img: req.body.img,
+//       price: req.body.price,
+//       qty: req.body.qty,
+//     }
+//   );
+//   res.redirect("/product/" + req.params.id);
+// });
 
 //======================
 // READ - Get
