@@ -41,8 +41,7 @@ const taskSeed = require("./models/seed.js");
 app.post("/seed", async (req, res) => {
   await TaskModel.create(taskSeed, (err, data) => {
     if (err) console.log(err.message);
-    res.redirect("/tasks");
-    console.log(`There are ${data} tasks in this database`);
+    res.redirect("http://localhost:3000/search/all");
   });
 });
 
@@ -53,25 +52,21 @@ app.post("/seed", async (req, res) => {
 app.post("/requests", async (req, res) => {
   await TaskModel.create(req.body, (err, data) => {
     if (err) console.log(err.message);
-    res.redirect("http://localhost:3000/tasks");
-    console.log(`There are ${data} tasks in this database`);
+    res.redirect("http://localhost:3000/search/all");
   });
 });
 
 //======================
-// CREATE - Post (Tasks - Change status to accepted)
+// UPDATE - Change tasks status 'accepted?' to true
 //======================
 
 app.post("/tasks", async (req, res) => {
   await TaskModel.updateOne(
     { _id: req.body.id },
-
     {
-      status: req.body.status,
+      accepted: req.body.accepted,
     }
   );
-  // res.redirect("http://localhost:3000/tasks");
-  res.json(req.body);
 });
 
 // app.post("/product/:id", async (req, res) => {
@@ -89,26 +84,31 @@ app.post("/tasks", async (req, res) => {
 // });
 
 //======================
-// READ - Get
+// READ - Get (for all + each category)
 //======================
 
-app.get("/tasks", async (req, res) => {
-  const allTasks = await TaskModel.find();
-  res.json(allTasks);
+app.get("/search/:type", async (req, res) => {
+  if (req.params.type === "all") {
+    const allRequests = await TaskModel.find();
+    res.json(allRequests);
+    return;
+  }
+  const requestType = await TaskModel.find({ type: req.params.type });
+  res.json(requestType);
 });
 
-// app.get("/tasks/:id", async (req, res) => {
-//   const result = await TaskModel.find({ _id: req.params.id });
-//   res.json(result);
-// });
-
 //======================
-// READ - Get (for each category)
+// DELETE - Delete
 //======================
 
-app.get("/tasks/:type", async (req, res) => {
-  const task = await TaskModel.find({ type: req.params.type });
-  res.json(task);
+app.post("/delete/:id", async (req, res) => {
+  if (req.params.id === "all") {
+    await TaskModel.deleteMany();
+    res.redirect("http://localhost:3000/search/all");
+    return;
+  }
+  await TaskModel.deleteOne({ _id: req.params.id });
+  res.redirect("/");
 });
 
 // =======================================
