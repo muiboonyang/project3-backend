@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json()); // allows res.body to work (express.json lets you read the req.body in json)
 app.use(express.urlencoded({ extended: false })); // allows you to read what the forms send over (by default, it's all encoded), just declare it
 app.use(methodOverride("_method"));
-
+// -- to delete if unnecessary --
 // put, delete - need to use method override
 // get, post - dont need method override
 
@@ -29,7 +29,7 @@ app.use(methodOverride("_method"));
 // Models
 const TaskModel = require("./models/tasks.js");
 const taskSeed = require("./models/seed.js");
-
+// -- to rename model file name --
 // =======================================
 //              ROUTES
 // =======================================
@@ -61,12 +61,14 @@ app.post("/requests", async (req, res) => {
 //======================
 
 app.post("/tasks", async (req, res) => {
-  await TaskModel.updateOne(
-    { _id: req.body.id },
-    {
+  try {
+    await TaskModel.findByIdAndUpdate(req.body.id, {
       accepted: req.body.accepted,
-    }
-  );
+    });
+    res.json({ message: "Updated!" });
+  } catch (err) {
+    console.error(err);
+  }
 });
 
 // app.post("/product/:id", async (req, res) => {
