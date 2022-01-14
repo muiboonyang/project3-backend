@@ -21,28 +21,38 @@ router.post("/new", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  const loginDetails = await UserModel.findOne({ username: req.body.username });
-  const hash = loginDetails.password;
-  const valid = await bcrypt.compare(password, hash);
+  const checkUserExist = await UserModel.find({ username: username }); // no matter the number of documents matched, a cursor {} is returned, never null
+  //   console.log(checkUserExist);
 
-  if (valid) {
-    req.session.currentUser = loginDetails.username;
-    req.session.auth = true;
-    console.log(
-      `Login sucecssful! username: ${username} | password: ${password} | hash: ${hash}`
-    );
-    // res.send({ username: username });
-    res.redirect("http://localhost:3000/");
+  if (checkUserExist.length === 0) {
+    res.status(403).json(`The username "${username}" does not exist.`);
+    return;
   } else {
-    req.session.auth = false;
-    res.status(403).json({ status: "forbidden", msg: "Login unsuccessful" });
+    const loginDetails = await UserModel.findOne({ username: username }); //  if query matches, first document is returned, otherwise null.
+    // console.log(loginDetails);
+    const hash = loginDetails.password;
+    const valid = await bcrypt.compare(password, hash);
+
+    if (valid) {
+      req.session.currentUser = loginDetails.username;
+      req.session.auth = true;
+      res.json(
+        `Login sucecssful! username: ${username} | password: ${password} | hash: ${hash}`
+      );
+      return;
+    } else {
+      req.session.auth = false;
+      res
+        .status(403)
+        .json({ status: "forbidden", message: "Login unsuccessful" });
+    }
   }
 });
 
 // Destroy session (log out)
 router.post("/logout", (req, res) => {
   req.session.destroy();
-  res.redirect("/");
+  res.send("Logged out successfully!");
 });
 
 //======================

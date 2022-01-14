@@ -17,7 +17,7 @@ const TaskModel = require("../models/tasks");
 router.post("/", async (req, res) => {
   await TaskModel.create(req.body, (err, data) => {
     if (err) console.log(err.message);
-    res.redirect("http://localhost:3000/search/all");
+    res.render("http://localhost:3000/search/all");
   });
 });
 

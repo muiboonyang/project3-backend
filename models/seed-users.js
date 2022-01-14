@@ -1,18 +1,31 @@
 module.exports = [
   {
-    username: "merlin",
-    password: "countryroads",
-    messages: ["teamwork is paramount", "take me home, country road"],
+    username: "clement",
+    password: "1",
   },
-  { username: "lancelot", password: "roxy" },
+  { username: "ernest", password: "2" },
   {
-    username: "eggsy",
-    password: "galahadjr",
-    messages: ["who's in the mood for saving the world?"],
+    username: "jengmun",
+    password: "3",
   },
   {
-    username: "galahad",
-    password: "harry",
-    messages: ["manners maketh man", "we're the new knights"],
+    username: "1",
+    password: "1",
+  },
+  {
+    username: "2",
+    password: "2",
+  },
+  {
+    username: "3",
+    password: "3",
+  },
+  {
+    username: "4",
+    password: "4",
+  },
+  {
+    username: "5",
+    password: "5",
   },
 ];
