@@ -18,6 +18,12 @@ app.use(cors());
 app.use(express.json()); // allows res.body to work (express.json lets you read the req.body in json)
 app.use(express.urlencoded({ extended: false })); // allows you to read what the forms send over (by default, it's all encoded), just declare it
 app.use(methodOverride("_method"));
+<<<<<<< Updated upstream
+=======
+// -- to delete if unnecessary --
+// put, delete - need to use method override
+// get, post - dont need method override
+>>>>>>> Stashed changes
 
 // =======================================
 //              DATABASE
@@ -26,7 +32,7 @@ app.use(methodOverride("_method"));
 // Models
 const TaskModel = require("./models/tasks.js");
 const taskSeed = require("./models/seed.js");
-
+// -- to rename model file name --
 // =======================================
 //              ROUTES
 // =======================================
@@ -59,9 +65,21 @@ app.post("/requests", async (req, res) => {
 // READ - Get
 //======================
 
+<<<<<<< Updated upstream
 app.get("/tasks", async (req, res) => {
   const allTasks = await TaskModel.find();
   res.json(allTasks);
+=======
+app.post("/tasks", async (req, res) => {
+  try {
+    await TaskModel.findByIdAndUpdate(req.body.id, {
+      accepted: req.body.accepted,
+    });
+    res.json({ message: "Updated!" });
+  } catch (err) {
+    console.error(err);
+  }
+>>>>>>> Stashed changes
 });
 
 // app.get("/tasks/:id", async (req, res) => {
