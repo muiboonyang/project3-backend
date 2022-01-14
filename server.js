@@ -18,7 +18,7 @@ app.use(cors());
 app.use(express.json()); // allows res.body to work (express.json lets you read the req.body in json)
 app.use(express.urlencoded({ extended: false })); // allows you to read what the forms send over (by default, it's all encoded), just declare it
 app.use(methodOverride("_method"));
-// -- to delete if unnecessary --
+
 // put, delete - need to use method override
 // get, post - dont need method override
 
@@ -29,7 +29,7 @@ app.use(methodOverride("_method"));
 // Models
 const TaskModel = require("./models/tasks.js");
 const taskSeed = require("./models/seed.js");
-// -- to rename model file name --
+
 // =======================================
 //              ROUTES
 // =======================================
@@ -41,50 +41,74 @@ const taskSeed = require("./models/seed.js");
 app.post("/seed", async (req, res) => {
   await TaskModel.create(taskSeed, (err, data) => {
     if (err) console.log(err.message);
-    res.redirect("/tasks");
-    console.log(`There are ${data} tasks in this database`);
+    res.redirect("http://localhost:3000/search/all");
   });
 });
 
 //======================
-// CREATE - Post
+// CREATE - Post (New Requests)
 //======================
 
 app.post("/requests", async (req, res) => {
   await TaskModel.create(req.body, (err, data) => {
     if (err) console.log(err.message);
-    res.redirect("http://localhost:3000/tasks");
-    console.log(`There are ${data} tasks in this database`);
+    res.redirect("http://localhost:3000/search/all");
   });
 });
 
 //======================
-// READ - Get
+// UPDATE - Change tasks status 'accepted?' to true
 //======================
 
 app.post("/tasks", async (req, res) => {
-  try {
-    await TaskModel.findByIdAndUpdate(req.body.id, {
+  await TaskModel.updateOne(
+    { _id: req.body.id },
+    {
       accepted: req.body.accepted,
-    });
-    res.json({ message: "Updated!" });
-  } catch (err) {
-    console.error(err);
-  }
+    }
+  );
 });
 
-// app.get("/tasks/:id", async (req, res) => {
-//   const result = await TaskModel.find({ _id: req.params.id });
-//   res.json(result);
+// app.post("/product/:id", async (req, res) => {
+//   await Product.updateOne(
+//     { _id: req.params.id },
+//     {
+//       name: req.body.name,
+//       description: req.body.description,
+//       img: req.body.img,
+//       price: req.body.price,
+//       qty: req.body.qty,
+//     }
+//   );
+//   res.redirect("/product/" + req.params.id);
 // });
 
 //======================
-// READ - Get (for each category)
+// READ - Get (for all + each category)
 //======================
 
-app.get("/tasks/:type", async (req, res) => {
-  const task = await TaskModel.find({ type: req.params.type });
-  res.json(task);
+app.get("/search/:type", async (req, res) => {
+  if (req.params.type === "all") {
+    const allRequests = await TaskModel.find();
+    res.json(allRequests);
+    return;
+  }
+  const requestType = await TaskModel.find({ type: req.params.type });
+  res.json(requestType);
+});
+
+//======================
+// DELETE - Delete
+//======================
+
+app.post("/delete/:id", async (req, res) => {
+  if (req.params.id === "all") {
+    await TaskModel.deleteMany();
+    res.redirect("http://localhost:3000/search/all");
+    return;
+  }
+  await TaskModel.deleteOne({ _id: req.params.id });
+  res.redirect("/");
 });
 
 // =======================================
