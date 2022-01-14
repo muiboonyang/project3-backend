@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Kingsman: The Secret Service</title>
+    <!-- FONTS -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700"
+      rel="stylesheet"
+    />
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- ====== TOP HEADER BAR ====== -->
+    <div class="header">
+      <!-- title -->
+      <div class="header-title">
+        <img src="img/logo.png" alt="kingsman logo" />
+        <div>
+          <h1>MANNERS. MAKETH. MAN.</h1>
+        </div>
+      </div>
+      <!-- navigation -->
+      <div class="header-nav">
+        <ul>
+          <!-- fitting room link -->
+          <li><a href="/room">fitting room three</a></li>
+          <!-- add your form button to log out here -->
+          <li>
+            <form method="post" action="/sessions/logout">
+              <input type="submit" value="Log Out" />
+            </form>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- ===== MAIN FITTING ROOM 3 CONTENT ===== -->
+    <div class="main">
+      <!-- image -->
+      <img src="img/fittingroom.jpg" alt="a kingsman's wardrobe" />
+      <!-- main content -->
+      <div class="main-abt">
+        <h1>access granted: welcome to fitting room 3</h1>
+        Welcome agents, here in fitting room three you can post classified
+        messages to fellow agents. Please make sure you keep your username and
+        password safe at all times so no one else can acccess this page. And
+        remember, we kingsmen are the new knights. So what do you say we save
+        the world?
+      </div>
+      <!-- messages -->
+      <div class="main-messages">
+        <!-- post a new message form -->
+        <h1>post a message</h1>
+        <form class="new-messages" action="/room/new" method="post">
+          <textarea
+            name="message"
+            placeholder="TYPE YOUR MESSAGE HERE..."
+          ></textarea>
+          <input type="submit" value="POST" />
+        </form>
+        <!-- displays all messages -->
+        <h1>the message board</h1>
+        <% users.forEach((user) => { %> <% user.messages.forEach((message) => {
+        %>
+        <div class="main-message"><%= message %></div>
+        <% }) %> <% }) %>
+      </div>
+    </div>
+  </body>
+</html>

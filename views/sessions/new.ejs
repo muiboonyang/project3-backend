@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>U3D8 Homework</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.0/normalize.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <h2>Log In</h2>
+
+      <form action="/sessions/new" method="post" class="form-submit">
+        <div class="form-group">
+          <label for="name">Username</label>
+          <input
+            type="text"
+            class="form-control"
+            name="username"
+            placeholder="Enter username"
+          />
+
+          <label for="description">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            name="password"
+            placeholder="Enter password"
+          />
+        </div>
+
+        <br />
+
+        <input type="submit" class="btn btn-primary" value="Log In" />
+      </form>
+
+      <form action="/">
+        <input type="submit" value="BACK" />
+      </form>
+    </div>
+  </body>
+</html>
