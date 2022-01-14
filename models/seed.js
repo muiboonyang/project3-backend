@@ -9,6 +9,7 @@ module.exports = [
     type: "plumbing",
     date: "01/01/2021",
     comments: "I need help with xx",
+    accepted: false,
   },
   {
     name: "Ernest",
@@ -20,6 +21,7 @@ module.exports = [
     type: "cleaning",
     date: "01/13/2022",
     comments: "I need help with yy",
+    accepted: false,
   },
   {
     name: "Jeng Mun",
@@ -31,5 +33,6 @@ module.exports = [
     type: "grocery",
     date: "12/01/2021",
     comments: "I need help with zz",
+    accepted: false,
   },
 ];
