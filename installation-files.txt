@@ -1,0 +1,23 @@
+1. npm init -y
+2. npm i express
+3. npm i -D nodemon      
+4. npm run dev
+
+// Notes
+-  when you run build, it will use whatever is in dependencies
+- nodemon 
+>> wont be part of your production (build)
+>> dont have to stop and start server everytime you make a change, automatically restarts server 
+
+//////////////////////////////
+
+npm i cors
+npm i mongoose
+npm i express-session
+npm i method-override
+npm i bcrypt
+
+npm i ejs
+
+//////////////////////////////
+npm i express-react-views
