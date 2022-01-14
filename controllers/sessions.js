@@ -16,6 +16,12 @@ router.get("/new", (req, res) => {
   res.render("http://localhost:3000/login");
 });
 
+// Get current user name
+// router.get("/", (req, res) => {
+//   const username = req.body.username;
+//   res.json({ username });
+// });
+
 // Create session (new log in)
 router.post("/new", async (req, res) => {
   const username = req.body.username;
