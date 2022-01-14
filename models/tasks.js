@@ -16,6 +16,7 @@ const TaskSchema = new mongoose.Schema(
     date: { type: Date, required: true },
     comments: { type: String },
     accepted: { type: Boolean, default: false }, // accepted, in progress, completed, pending acceptance
+    completed: { type: Boolean, default: false },
   },
   { timestamps: true, collection: "tasks" }
 );

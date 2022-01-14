@@ -10,6 +10,7 @@ module.exports = [
     date: "01/01/2021",
     comments: "I need help with xx",
     accepted: false,
+    completed: false,
   },
   {
     name: "Ernest",
@@ -22,6 +23,7 @@ module.exports = [
     date: "01/13/2022",
     comments: "I need help with yy",
     accepted: false,
+    completed: false,
   },
   {
     name: "Jeng Mun",
@@ -34,5 +36,6 @@ module.exports = [
     date: "12/01/2021",
     comments: "I need help with zz",
     accepted: false,
+    completed: false,
   },
 ];
