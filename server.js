@@ -52,7 +52,7 @@ app.post("/seed", async (req, res) => {
 app.post("/requests", async (req, res) => {
   await TaskModel.create(req.body, (err, data) => {
     if (err) console.log(err.message);
-    res.redirect("http://localhost:3000/search/all");
+    res.json(req.body);
   });
 });
 
@@ -60,10 +60,23 @@ app.post("/requests", async (req, res) => {
 // UPDATE - Change tasks status 'accepted?' to true
 //======================
 
+// Change accepted to true
 app.post("/tasks", async (req, res) => {
   try {
     await TaskModel.findByIdAndUpdate(req.body.id, {
       accepted: req.body.accepted,
+    });
+    res.json({ message: "Updated!" });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+// Change completed to true
+app.post("/complete", async (req, res) => {
+  try {
+    await TaskModel.findByIdAndUpdate(req.body.id, {
+      completed: req.body.completed,
     });
     res.json({ message: "Updated!" });
   } catch (err) {
