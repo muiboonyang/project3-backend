@@ -14,9 +14,12 @@ const TaskSchema = new mongoose.Schema(
     zipcode: { type: String, required: true },
     type: { type: String, required: true },
     date: { type: Date, required: true },
+    title: { type: String, required: true },
     comments: { type: String },
+    deadline: { type: Date },
     accepted: { type: Boolean, default: false }, // accepted, in progress, completed, pending acceptance
     completed: { type: Boolean, default: false },
+    image: { type: String },
   },
   { timestamps: true, collection: "tasks" }
 );

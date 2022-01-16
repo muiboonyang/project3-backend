@@ -6,21 +6,27 @@
 const connectDB = require("./models/db");
 const express = require("express");
 const cors = require("cors");
+const multer = require("multer");
 
 // Config
 const mongoURI = "mongodb://localhost:27017/tasks";
 connectDB(mongoURI);
 
 const app = express();
-const methodOverride = require("method-override");
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage });
 
 app.use(cors());
 app.use(express.json()); // allows res.body to work (express.json lets you read the req.body in json)
 app.use(express.urlencoded({ extended: false })); // allows you to read what the forms send over (by default, it's all encoded), just declare it
-app.use(methodOverride("_method"));
-// -- to delete if unnecessary --
-// put, delete - need to use method override
-// get, post - dont need method override
+app.use("/uploads", express.static("uploads"));
 
 // =======================================
 //              DATABASE
@@ -49,8 +55,8 @@ app.post("/seed", async (req, res) => {
 // CREATE - Post (New Requests)
 //======================
 
-app.post("/requests", async (req, res) => {
-  await TaskModel.create(req.body, (err, data) => {
+app.post("/requests", upload.single("image"), async (req, res) => {
+  await TaskModel.create({ ...req.body, image: req.file.path }, (err, data) => {
     if (err) console.log(err.message);
     res.json(req.body);
   });
@@ -110,6 +116,11 @@ app.get("/search/:type", async (req, res) => {
   }
   const requestType = await TaskModel.find({ type: req.params.type });
   res.json(requestType);
+});
+
+app.get("/search/:type/:id", async (req, res) => {
+  const requestCard = await TaskModel.findOne({ _id: req.params.id });
+  res.json(requestCard);
 });
 
 //======================
