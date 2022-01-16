@@ -20,7 +20,7 @@ const app = express();
 // =======================================
 
 // body parser middleware
-app.use(cors());
+app.use(cors()); // overcomes cors issue
 app.use(express.json()); // allows res.body to work (express.json lets you read the req.body in json)
 app.use(express.urlencoded({ extended: false })); // allows you to read what the forms send over (by default, it's all encoded), just declare it
 app.use(methodOverride("_method")); // get, post - dont need method override / put, delete - need to use method override
@@ -59,7 +59,10 @@ app.use("/search", searchController);
 // =======================================
 
 const TaskModel = require("./models/tasks.js");
-const taskSeed = require("./models/seed.js");
+const UserModel = require("./models/users.js");
+
+const taskSeed = require("./models/seed-tasks.js");
+const userSeed = require("./models/seed-users.js");
 
 // =======================================
 //              ROUTES
@@ -69,10 +72,22 @@ const taskSeed = require("./models/seed.js");
 // CREATE - Seed data
 //======================
 
-app.post("/seed", async (req, res) => {
+app.post("/seedtask", async (req, res) => {
   await TaskModel.create(taskSeed, (err, data) => {
     if (err) console.log(err.message);
     res.redirect("http://localhost:3000/search/all");
+  });
+});
+
+app.post("/seeduser", async (req, res) => {
+  // encrypts the given seed passwords
+  await userSeed.forEach((user) => {
+    user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
+  });
+
+  UserModel.create(userSeed, (err, createdUsers) => {
+    console.log(createdUsers);
+    res.redirect("http://localhost:3000/");
   });
 });
 
@@ -81,9 +96,13 @@ app.post("/seed", async (req, res) => {
 //======================
 
 app.post("/delete/:id", async (req, res) => {
-  if (req.params.id === "all") {
+  if (req.params.id === "alltask") {
     await TaskModel.deleteMany();
     res.redirect("http://localhost:3000/search/all");
+    return;
+  } else if (req.params.id === "alluser") {
+    await UserModel.deleteMany();
+    res.redirect("http://localhost:3000/");
     return;
   }
   await TaskModel.deleteOne({ _id: req.params.id });
