@@ -15,9 +15,13 @@ const TaskModel = require("../models/tasks");
 //======================
 
 router.post("/", async (req, res) => {
-  await TaskModel.create(req.body, (err, data) => {
-    if (err) console.log(err.message);
-    res.render("http://localhost:3000/search/all");
+  await TaskModel.create(req.body, (err) => {
+    if (err) {
+      res.status(403).json(`Form failed to submit.`);
+      return;
+    } else {
+      res.json(`Form submitted successfully!`);
+    }
   });
 });
 

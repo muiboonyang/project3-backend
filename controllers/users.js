@@ -13,7 +13,7 @@ const UserModel = require("../models/users.js");
 
 // Get 'create new account' form
 router.get("/new", (req, res) => {
-  res.render("http://localhost:3000/register");
+  res.redirect("http://localhost:3000/register");
 });
 
 // Post - Create new account using form input

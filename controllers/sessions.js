@@ -13,7 +13,7 @@ const UserModel = require("../models/users.js");
 
 // Get 'Log In' form
 router.get("/new", (req, res) => {
-  res.render("http://localhost:3000/login");
+  res.redirect("http://localhost:3000/login");
 });
 
 // Get current user name
