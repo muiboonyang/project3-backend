@@ -5,117 +5,90 @@
 // Dependencies
 const connectDB = require("./models/db");
 const express = require("express");
+const session = require("express-session");
 const cors = require("cors");
-const multer = require("multer");
+const bcrypt = require("bcrypt");
 
 // Config
-const mongoURI = "mongodb://localhost:27017/tasks";
+const mongoURI = "mongodb://localhost:27017/project3";
 connectDB(mongoURI);
 
 const app = express();
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "./uploads");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
-});
-const upload = multer({ storage });
 
-app.use(cors());
+// =======================================
+//                MIDDLEWARE
+// =======================================
+
+// body parser middleware
+app.use(cors()); // overcomes cors issue
 app.use(express.json()); // allows res.body to work (express.json lets you read the req.body in json)
 app.use(express.urlencoded({ extended: false })); // allows you to read what the forms send over (by default, it's all encoded), just declare it
 app.use("/uploads", express.static("uploads"));
+app.use(express.static("public")); // allow loading of static files in "public" directory
+
+// session middleware
+app.use(
+  session({
+    secret: "project3",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
 
 // =======================================
-//              DATABASE
+//                CONTROLLERS
 // =======================================
 
-// Models
+const userController = require("./controllers/users.js");
+app.use("/users", userController);
+
+const sessionController = require("./controllers/sessions.js");
+app.use("/sessions", sessionController);
+
+const taskController = require("./controllers/tasks.js");
+app.use("/tasks", taskController);
+
+const requestController = require("./controllers/requests.js");
+app.use("/requests", requestController);
+
+const searchController = require("./controllers/search.js");
+app.use("/search", searchController);
+
+// =======================================
+//              DATABASE (MODELS)
+// =======================================
+
 const TaskModel = require("./models/tasks.js");
-const taskSeed = require("./models/seed.js");
-// -- to rename model file name --
+const UserModel = require("./models/users.js");
+
+const taskSeed = require("./models/seed-tasks.js");
+const userSeed = require("./models/seed-users.js");
+
 // =======================================
 //              ROUTES
 // =======================================
 
 //======================
-// Seed data
+// CREATE - Seed data
 //======================
 
-app.post("/seed", async (req, res) => {
+app.post("/seedtask", async (req, res) => {
   await TaskModel.create(taskSeed, (err, data) => {
     if (err) console.log(err.message);
     res.redirect("http://localhost:3000/search/all");
   });
 });
 
-//======================
-// CREATE - Post (New Requests)
-//======================
-
-app.post("/requests", upload.single("image"), async (req, res) => {
-  await TaskModel.create({ ...req.body, image: req.file.path }, (err, data) => {
-    if (err) console.log(err.message);
-    res.json(req.body);
+app.post("/seeduser", async (req, res) => {
+  // encrypts the given seed passwords
+  await userSeed.forEach((user) => {
+    user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
   });
-});
 
-//======================
-// UPDATE - Change tasks status 'accepted?' to true
-//======================
-
-// Change accepted to true
-app.post("/tasks", async (req, res) => {
-  try {
-    await TaskModel.findByIdAndUpdate(req.body.id, {
-      accepted: req.body.accepted,
-    });
-    res.json({ message: "Updated!" });
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-// Change completed to true
-app.post("/complete", async (req, res) => {
-  try {
-    await TaskModel.findByIdAndUpdate(req.body.id, {
-      completed: req.body.completed,
-    });
-    res.json({ message: "Updated!" });
-  } catch (err) {
-    console.error(err);
-  }
-});
-
-// app.post("/product/:id", async (req, res) => {
-//   await Product.updateOne(
-//     { _id: req.params.id },
-//     {
-//       name: req.body.name,
-//       description: req.body.description,
-//       img: req.body.img,
-//       price: req.body.price,
-//       qty: req.body.qty,
-//     }
-//   );
-//   res.redirect("/product/" + req.params.id);
-// });
-
-//======================
-// READ - Get (for all + each category)
-//======================
-
-app.get("/search/:type", async (req, res) => {
-  if (req.params.type === "all") {
-    const allRequests = await TaskModel.find();
-    res.json(allRequests);
-    return;
-  }
-  const requestType = await TaskModel.find({ type: req.params.type });
-  res.json(requestType);
+  UserModel.create(userSeed, (err, createdUsers) => {
+    console.log(createdUsers);
+    res.redirect("http://localhost:3000/");
+  });
 });
 
 app.get("/search/:type/:id", async (req, res) => {
@@ -128,9 +101,13 @@ app.get("/search/:type/:id", async (req, res) => {
 //======================
 
 app.post("/delete/:id", async (req, res) => {
-  if (req.params.id === "all") {
+  if (req.params.id === "alltask") {
     await TaskModel.deleteMany();
     res.redirect("http://localhost:3000/search/all");
+    return;
+  } else if (req.params.id === "alluser") {
+    await UserModel.deleteMany();
+    res.redirect("http://localhost:3000/");
     return;
   }
   await TaskModel.deleteOne({ _id: req.params.id });
