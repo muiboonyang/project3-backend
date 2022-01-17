@@ -30,6 +30,15 @@ router.get("/:type/:id", async (req, res) => {
 });
 
 //======================
+// READ - Get task by category + specific task
+//======================
+
+router.get("/:type/:id", async (req, res) => {
+  const requestCard = await TaskModel.findOne({ _id: req.params.id });
+  res.json(requestCard);
+});
+
+//======================
 // EXPORT
 //======================
 

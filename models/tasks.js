@@ -15,9 +15,9 @@ const TaskSchema = new mongoose.Schema(
     type: { type: String, required: true },
     date: { type: Date, required: true },
     title: { type: String, required: true },
+    deadline: { type: Date, required: true },
     comments: { type: String },
-    deadline: { type: Date },
-    accepted: { type: Boolean, default: false }, // accepted, in progress, completed, pending acceptance
+    accepted: { type: Boolean, default: false },
     completed: { type: Boolean, default: false },
     image: { type: String },
   },

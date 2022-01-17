@@ -25,8 +25,11 @@ const upload = multer({ storage });
 // CREATE - Post (Create new 'requests' based on form input)
 //======================
 
-router.post("/", upload.single("image"), async (req, res) => {
-  await TaskModel.create({ ...req.body, image: req.file.path }, (err) => {
+// router.post("/", upload.single("image"), async (req, res) => {
+//   await TaskModel.create({ ...req.body, image: req.file.path }, (err) => {
+
+router.post("/", async (req, res) => {
+  await TaskModel.create(req.body, (err) => {
     if (err) {
       res.status(403).json(`Form failed to submit.`);
       return;
