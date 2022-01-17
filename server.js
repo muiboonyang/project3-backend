@@ -8,6 +8,17 @@ const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage });
 
 // Config
 const mongoURI = "mongodb://localhost:27017/project3";
@@ -54,9 +65,6 @@ app.use("/requests", requestController);
 const searchController = require("./controllers/search.js");
 app.use("/search", searchController);
 
-const completeController = require("./controllers/complete.js");
-app.use("/complete", completeController);
-
 // =======================================
 //              DATABASE (MODELS)
 // =======================================
@@ -94,6 +102,24 @@ app.post("/seeduser", async (req, res) => {
   });
 });
 
+//======================
+// CREATE - Import form data
+//======================
+
+app.post("/requests", upload.single("image"), async (req, res) => {
+  if (req.file) {
+    await TaskModel.findOneAndUpdate({ image: "" }, { image: req.file.path });
+  } else {
+    await TaskModel.create(req.body, (err) => {
+      if (err) {
+        res.status(403).json(`Form failed to submit.`);
+        return;
+      } else {
+        res.json(`Form submitted successfully!`);
+      }
+    });
+  }
+});
 
 //======================
 // DELETE - Delete

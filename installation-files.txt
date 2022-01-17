@@ -16,8 +16,6 @@ npm i mongoose
 npm i express-session
 npm i method-override
 npm i bcrypt
-
-npm i ejs
+npm i multer
 
 //////////////////////////////
-npm i express-react-views
