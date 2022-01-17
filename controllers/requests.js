@@ -5,6 +5,17 @@
 const express = require("express");
 const router = express.Router();
 const TaskModel = require("../models/tasks");
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "../uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage });
 
 //======================
 // ROUTES
@@ -13,6 +24,9 @@ const TaskModel = require("../models/tasks");
 //======================
 // CREATE - Post (Create new 'requests' based on form input)
 //======================
+
+// router.post("/", upload.single("image"), async (req, res) => {
+//   await TaskModel.create({ ...req.body, image: req.file.path }, (err) => {
 
 router.post("/", async (req, res) => {
   await TaskModel.create(req.body, (err) => {

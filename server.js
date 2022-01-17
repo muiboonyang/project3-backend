@@ -7,7 +7,6 @@ const connectDB = require("./models/db");
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
-const methodOverride = require("method-override");
 const bcrypt = require("bcrypt");
 
 // Config
@@ -23,8 +22,8 @@ const app = express();
 app.use(cors()); // overcomes cors issue
 app.use(express.json()); // allows res.body to work (express.json lets you read the req.body in json)
 app.use(express.urlencoded({ extended: false })); // allows you to read what the forms send over (by default, it's all encoded), just declare it
-app.use(methodOverride("_method")); // get, post - dont need method override / put, delete - need to use method override
 app.use(express.static("public")); // allow loading of static files in "public" directory
+app.use("/uploads", express.static("uploads"));
 
 // session middleware
 app.use(
@@ -53,6 +52,9 @@ app.use("/requests", requestController);
 
 const searchController = require("./controllers/search.js");
 app.use("/search", searchController);
+
+const completeController = require("./controllers/complete.js");
+app.use("/complete", completeController);
 
 // =======================================
 //              DATABASE (MODELS)
