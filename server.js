@@ -91,10 +91,6 @@ app.post("/seeduser", async (req, res) => {
   });
 });
 
-app.get("/search/:type/:id", async (req, res) => {
-  const requestCard = await TaskModel.findOne({ _id: req.params.id });
-  res.json(requestCard);
-});
 
 //======================
 // DELETE - Delete
