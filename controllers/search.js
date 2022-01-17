@@ -29,11 +29,8 @@ router.get("/:type", async (req, res) => {
 //======================
 
 router.get("/:type/:id", async (req, res) => {
-  const requestType = await TaskModel.find({
-    type: req.params.type,
-    _id: req.params.id,
-  });
-  res.json(requestType);
+  const requestCard = await TaskModel.findOne({ _id: req.params.id });
+  res.json(requestCard);
 });
 
 //======================

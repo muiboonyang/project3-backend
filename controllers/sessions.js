@@ -43,7 +43,7 @@ router.post("/new", async (req, res) => {
       req.session.currentUser = loginDetails.username;
       req.session.auth = true;
       res.json(
-        `Login sucecssful! username: ${username} | password: ${password} | hash: ${hash}`
+        `Login sucessful! username: ${username} | password: ${password} | hash: ${hash}`
       );
       return;
     } else {
