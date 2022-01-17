@@ -25,6 +25,18 @@ router.post("/", async (req, res) => {
   }
 });
 
+// Change completed to true
+app.post("/complete", async (req, res) => {
+  try {
+    await TaskModel.findByIdAndUpdate(req.body.id, {
+      completed: req.body.completed,
+    });
+    res.json({ message: "Updated!" });
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 //======================
 // UPDATE - Change completed to true
 //======================

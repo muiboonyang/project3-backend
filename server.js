@@ -12,6 +12,7 @@ const bcrypt = require("bcrypt");
 // Config
 const mongoURI = "mongodb://localhost:27017/project3";
 connectDB(mongoURI);
+
 const app = express();
 
 // =======================================
@@ -92,6 +93,7 @@ app.post("/seeduser", async (req, res) => {
     res.redirect("http://localhost:3000/");
   });
 });
+
 
 //======================
 // DELETE - Delete

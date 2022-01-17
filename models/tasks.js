@@ -19,6 +19,7 @@ const TaskSchema = new mongoose.Schema(
     comments: { type: String },
     accepted: { type: Boolean, default: false },
     completed: { type: Boolean, default: false },
+    image: { type: String },
   },
   { timestamps: true, collection: "tasks" }
 );
