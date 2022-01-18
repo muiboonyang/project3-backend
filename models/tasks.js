@@ -19,7 +19,11 @@ const TaskSchema = new mongoose.Schema(
     comments: { type: String },
     accepted: { type: Boolean, default: false },
     completed: { type: Boolean, default: false },
-    image: { type: String, default: "" },
+    image: {
+      type: String,
+      default:
+        "https://lp-cms-production.imgix.net/2019-06/3cb45f6e59190e8213ce0a35394d0e11-nice.jpg",
+    },
   },
   { timestamps: true, collection: "tasks" }
 );
