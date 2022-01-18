@@ -71,7 +71,6 @@ const UserModel = require("./models/users.js");
 
 const taskSeed = require("./models/seed-tasks.js");
 const userSeed = require("./models/seed-users.js");
-const { reset } = require("nodemon");
 
 // =======================================
 //              ROUTES
