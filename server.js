@@ -83,22 +83,21 @@ const userSeed = require("./models/seed-users.js");
 // CREATE - Seed data
 //======================
 
-app.post("/seedtask", async (req, res) => {
-  await TaskModel.create(taskSeed, (err, data) => {
+app.get("/seedtask", async (req, res) => {
+  const seedTask = await TaskModel.create(taskSeed, (err, data) => {
     if (err) console.log(err.message);
-    res.redirect("http://localhost:3000/search/all");
+    res.json(seedTask);
   });
 });
 
-app.post("/seeduser", async (req, res) => {
-  // encrypts the given seed passwords
+app.get("/seeduser", async (req, res) => {
   await userSeed.forEach((user) => {
     user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
   });
 
-  UserModel.create(userSeed, (err, createdUsers) => {
-    console.log(createdUsers);
-    res.redirect("http://localhost:3000/");
+  UserModel.create(userSeed, (err, seedUser) => {
+    if (err) console.log(err.message);
+    res.json(seedUser);
   });
 });
 
@@ -125,18 +124,18 @@ app.post("/requests", upload.single("image"), async (req, res) => {
 // DELETE - Delete
 //======================
 
-app.post("/delete/:id", async (req, res) => {
+app.get("/delete/:id", async (req, res) => {
   if (req.params.id === "alltask") {
     await TaskModel.deleteMany();
-    res.redirect("http://localhost:3000/search/all");
+    res.json(`All tasks deleted successfuly!`);
     return;
   } else if (req.params.id === "alluser") {
     await UserModel.deleteMany();
-    res.redirect("http://localhost:3000/");
+    res.json(`All users deleted successfuly!`);
     return;
   }
   await TaskModel.deleteOne({ _id: req.params.id });
-  res.redirect("/");
+  res.json(`Task deleted successfuly!`);
 });
 
 // =======================================

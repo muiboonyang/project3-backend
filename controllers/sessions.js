@@ -11,25 +11,21 @@ const UserModel = require("../models/users.js");
 // ROUTES
 //======================
 
-// Get 'Log In' form
-router.get("/new", (req, res) => {
-  res.redirect("http://localhost:3000/login");
-});
+//======================
+// CREATE - Post - Create session (new log in)
+//=======================
 
-// Create session (new log in)
 router.post("/new", async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
   const checkUserExist = await UserModel.find({ username: username }); // no matter the number of documents matched, a cursor {} is returned, never null
-  //   console.log(checkUserExist);
 
   if (checkUserExist.length === 0) {
     res.status(403).json(`The username "${username}" does not exist.`);
     return;
   } else {
     const loginDetails = await UserModel.findOne({ username: username }); //  if query matches, first document is returned, otherwise null.
-    // console.log(loginDetails);
     const hash = loginDetails.password;
     const valid = await bcrypt.compare(password, hash);
 
@@ -50,15 +46,10 @@ router.post("/new", async (req, res) => {
   }
 });
 
-// Get current user name
-// router.get("/", async (req, res) => {
-//   const username = req.session.currentUser;
-//   // const username = await UserModel.find({ username: req.session.currentUser });
-//   res.json({ username });
-//   console.log(username);
-// });
+//======================
+// DESTROY - Destroy session (log out)
+//=======================
 
-// Destroy session (log out)
 router.get("/logout", (req, res) => {
   req.session.destroy();
   res.json("Logged out successfully!");
