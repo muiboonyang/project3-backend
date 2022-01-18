@@ -20,7 +20,6 @@ router.get("/", async (req, res) => {
   res.json(allUsers);
 });
 
-
 //======================
 // READ - Get (user profile of current user)
 //=======================
@@ -54,6 +53,41 @@ router.post("/new", async (req, res) => {
     await UserModel.create({ ...formInput, password: hashPassword });
     res.json(
       `New user created! username: ${username} | password: ${password} | hash: ${hashPassword}`
+    );
+  }
+});
+
+//======================
+// UPDATE
+//======================
+
+router.get("/:username/update", async (req, res) => {
+  const formInput = req.body;
+  const username = req.body.username;
+  const password = req.body.password;
+
+  const existingUsername = await UserModel.find({ username: username });
+
+  if (existingUsername.length !== 0) {
+    res
+      .status(403)
+      .json(
+        `Username "${req.body.username}" already exists! Choose another username.`
+      );
+    return;
+  } else {
+    const hashPassword = await bcrypt.hash(password, 12);
+    await UserModel.findOneAndUpdate(
+      { username: req.params.username },
+      { ...formInput, password: hashPassword },
+      (err) => {
+        if (err) {
+          res.status(403).json(`Failed to update profile.`);
+          return;
+        } else {
+          res.json(`Profile updated successfully!`);
+        }
+      }
     );
   }
 });
