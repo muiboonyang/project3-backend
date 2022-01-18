@@ -59,9 +59,6 @@ app.use("/sessions", sessionController);
 const taskController = require("./controllers/tasks.js");
 app.use("/tasks", taskController);
 
-const requestController = require("./controllers/requests.js");
-app.use("/requests", requestController);
-
 const searchController = require("./controllers/search.js");
 app.use("/search", searchController);
 
@@ -74,6 +71,7 @@ const UserModel = require("./models/users.js");
 
 const taskSeed = require("./models/seed-tasks.js");
 const userSeed = require("./models/seed-users.js");
+const { reset } = require("nodemon");
 
 // =======================================
 //              ROUTES
@@ -102,21 +100,36 @@ app.get("/seeduser", async (req, res) => {
 });
 
 //======================
-// CREATE - Import form data
+// CREATE - Import form data (incorporate existing user data)
 //======================
 
-app.post("/requests", upload.single("image"), async (req, res) => {
+app.post("/requests/:username", upload.single("image"), async (req, res) => {
+  const userDetails = await UserModel.findOne({
+    username: req.params.username,
+  });
+
   if (req.file) {
     await TaskModel.findOneAndUpdate({ image: "" }, { image: req.file.path });
   } else {
-    await TaskModel.create(req.body, (err) => {
-      if (err) {
-        res.status(403).json(`Form failed to submit.`);
-        return;
-      } else {
-        res.json(`Form submitted successfully!`);
+    await TaskModel.create(
+      {
+        ...req.body,
+        name: userDetails.name,
+        email: userDetails.email,
+        contact: userDetails.contact,
+        address: userDetails.address,
+        unit: userDetails.unit,
+        zipcode: userDetails.zipcode,
+      },
+      (err) => {
+        if (err) {
+          res.status(403).json(`Form failed to submit.`);
+          return;
+        } else {
+          res.json(`Form submitted successfully!`);
+        }
       }
-    });
+    );
   }
 });
 

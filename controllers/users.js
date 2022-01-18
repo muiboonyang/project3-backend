@@ -12,7 +12,7 @@ const UserModel = require("../models/users.js");
 //======================
 
 //======================
-// READ - Get (user profile from)
+// READ - Get (user profile from database)
 //=======================
 
 router.get("/:username", async (req, res) => {
