@@ -12,7 +12,16 @@ const UserModel = require("../models/users.js");
 //======================
 
 //======================
-// READ - Get (user profile from)
+// READ - Get (all users)
+//=======================
+
+router.get("/", async (req, res) => {
+  const allUsers = await UserModel.find({});
+  res.json(allUsers);
+});
+
+//======================
+// READ - Get (user profile of current user)
 //=======================
 
 router.get("/:username", async (req, res) => {
