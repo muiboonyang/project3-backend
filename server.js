@@ -117,6 +117,7 @@ app.post("/requests/:username", upload.single("image"), async (req, res) => {
     await TaskModel.create(
       {
         ...req.body,
+        username: userDetails.username,
         name: userDetails.name,
         email: userDetails.email,
         contact: userDetails.contact,
@@ -151,7 +152,7 @@ app.get("/delete/:id", async (req, res) => {
     return;
   }
   await TaskModel.deleteOne({ _id: req.params.id });
-  res.json(`Task deleted successfuly!`);
+  res.json(`Task deleted successfully!`);
 });
 
 //======================
@@ -161,7 +162,14 @@ app.get("/delete/:id", async (req, res) => {
 app.post("/addreview", async (req, res) => {
   await UserModel.findOneAndUpdate(
     { username: req.body.acceptedBy },
-    { $push: { reviews: req.body.review } }
+    {
+      $push: {
+        reviews: {
+          review: req.body.review,
+          reviewer: req.body.reviewer,
+        },
+      },
+    }
   );
   await TaskModel.findByIdAndUpdate(req.body.id, { review: req.body.review });
   res.json("Updated review!");
