@@ -24,11 +24,6 @@ router.get("/:type", async (req, res) => {
   res.json(requestType);
 });
 
-router.get("/:type/:id", async (req, res) => {
-  const requestCard = await TaskModel.findOne({ _id: req.params.id });
-  res.json(requestCard);
-});
-
 //======================
 // READ - Get task by category + specific task
 //======================

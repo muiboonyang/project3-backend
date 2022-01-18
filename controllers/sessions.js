@@ -16,12 +16,6 @@ router.get("/new", (req, res) => {
   res.redirect("http://localhost:3000/login");
 });
 
-// Get current user name
-// router.get("/", (req, res) => {
-//   const username = req.body.username;
-//   res.json({ username });
-// });
-
 // Create session (new log in)
 router.post("/new", async (req, res) => {
   const username = req.body.username;
@@ -42,9 +36,10 @@ router.post("/new", async (req, res) => {
     if (valid) {
       req.session.currentUser = loginDetails.username;
       req.session.auth = true;
-      res.json(
-        `Login sucessful! username: ${username} | password: ${password} | hash: ${hash}`
-      );
+      // res.json(
+      //   `Login sucessful! username: ${username} | password: ${password} | hash: ${hash}`
+      // );
+      res.json({ username });
       return;
     } else {
       req.session.auth = false;
@@ -55,10 +50,18 @@ router.post("/new", async (req, res) => {
   }
 });
 
+// Get current user name
+// router.get("/", async (req, res) => {
+//   const username = req.session.currentUser;
+//   // const username = await UserModel.find({ username: req.session.currentUser });
+//   res.json({ username });
+//   console.log(username);
+// });
+
 // Destroy session (log out)
-router.post("/logout", (req, res) => {
+router.get("/logout", (req, res) => {
   req.session.destroy();
-  res.send("Logged out successfully!");
+  res.json("Logged out successfully!");
 });
 
 //======================
