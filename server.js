@@ -143,6 +143,19 @@ app.post("/delete/:id", async (req, res) => {
   res.redirect("/");
 });
 
+//======================
+// POST - Add reviews
+//======================
+
+app.post("/addreview", async (req, res) => {
+  await UserModel.findOneAndUpdate(
+    { username: req.body.acceptedBy },
+    { $push: { reviews: req.body.review } }
+  );
+  await TaskModel.findByIdAndUpdate(req.body.id, { review: req.body.review });
+  res.json("Updated review!");
+});
+
 // =======================================
 //              LISTENER
 // =======================================

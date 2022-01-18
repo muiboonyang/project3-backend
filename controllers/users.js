@@ -11,6 +11,11 @@ const UserModel = require("../models/users.js");
 // ROUTES
 //======================
 
+router.get("/", async (req, res) => {
+  const allUsers = await UserModel.find({});
+  res.json(allUsers);
+});
+
 // Get 'create new account' form
 router.get("/new", (req, res) => {
   res.redirect("http://localhost:3000/register");
