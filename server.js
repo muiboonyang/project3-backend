@@ -109,7 +109,11 @@ app.post("/requests/:username", upload.single("image"), async (req, res) => {
   });
 
   if (req.file) {
-    await TaskModel.findOneAndUpdate({ image: "" }, { image: req.file.path });
+    const data = await TaskModel.findOneAndUpdate(
+      {},
+      { image: req.file.path },
+      { sort: { createdAt: -1 } }
+    );
   } else {
     await TaskModel.create(
       {
