@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
   try {
     await TaskModel.findByIdAndUpdate(req.body.id, {
       accepted: req.body.accepted,
+      acceptedBy: req.body.acceptedBy,
     });
     res.json({ message: "Acceptance status updated!" });
   } catch (err) {

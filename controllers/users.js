@@ -20,6 +20,7 @@ router.get("/", async (req, res) => {
   res.json(allUsers);
 });
 
+
 //======================
 // READ - Get (user profile of current user)
 //=======================
