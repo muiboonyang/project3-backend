@@ -59,9 +59,6 @@ app.use("/sessions", sessionController);
 const taskController = require("./controllers/tasks.js");
 app.use("/tasks", taskController);
 
-const requestController = require("./controllers/requests.js");
-app.use("/requests", requestController);
-
 const searchController = require("./controllers/search.js");
 app.use("/search", searchController);
 
@@ -83,30 +80,33 @@ const userSeed = require("./models/seed-users.js");
 // CREATE - Seed data
 //======================
 
-app.post("/seedtask", async (req, res) => {
-  await TaskModel.create(taskSeed, (err, data) => {
+app.get("/seedtask", async (req, res) => {
+  const seedTask = await TaskModel.create(taskSeed, (err, data) => {
     if (err) console.log(err.message);
-    res.redirect("http://localhost:3000/search/all");
+    res.json(seedTask);
   });
 });
 
-app.post("/seeduser", async (req, res) => {
-  // encrypts the given seed passwords
+app.get("/seeduser", async (req, res) => {
   await userSeed.forEach((user) => {
     user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
   });
 
-  UserModel.create(userSeed, (err, createdUsers) => {
-    console.log(createdUsers);
-    res.redirect("http://localhost:3000/");
+  UserModel.create(userSeed, (err, seedUser) => {
+    if (err) console.log(err.message);
+    res.json(seedUser);
   });
 });
 
 //======================
-// CREATE - Import form data
+// CREATE - Import form data (incorporate existing user data)
 //======================
 
-app.post("/requests", upload.single("image"), async (req, res) => {
+app.post("/requests/:username", upload.single("image"), async (req, res) => {
+  const userDetails = await UserModel.findOne({
+    username: req.params.username,
+  });
+
   if (req.file) {
     const data = await TaskModel.findOneAndUpdate(
       {},
@@ -114,14 +114,25 @@ app.post("/requests", upload.single("image"), async (req, res) => {
       { sort: { createdAt: -1 } }
     );
   } else {
-    await TaskModel.create(req.body, (err) => {
-      if (err) {
-        res.status(403).json(`Form failed to submit.`);
-        return;
-      } else {
-        res.json(`Form submitted successfully!`);
+    await TaskModel.create(
+      {
+        ...req.body,
+        name: userDetails.name,
+        email: userDetails.email,
+        contact: userDetails.contact,
+        address: userDetails.address,
+        unit: userDetails.unit,
+        zipcode: userDetails.zipcode,
+      },
+      (err) => {
+        if (err) {
+          res.status(403).json(`Form failed to submit.`);
+          return;
+        } else {
+          res.json(`Form submitted successfully!`);
+        }
       }
-    });
+    );
   }
 });
 
@@ -129,18 +140,18 @@ app.post("/requests", upload.single("image"), async (req, res) => {
 // DELETE - Delete
 //======================
 
-app.post("/delete/:id", async (req, res) => {
+app.get("/delete/:id", async (req, res) => {
   if (req.params.id === "alltask") {
     await TaskModel.deleteMany();
-    res.redirect("http://localhost:3000/search/all");
+    res.json(`All tasks deleted successfuly!`);
     return;
   } else if (req.params.id === "alluser") {
     await UserModel.deleteMany();
-    res.redirect("http://localhost:3000/");
+    res.json(`All users deleted successfuly!`);
     return;
   }
   await TaskModel.deleteOne({ _id: req.params.id });
-  res.redirect("/");
+  res.json(`Task deleted successfuly!`);
 });
 
 //======================

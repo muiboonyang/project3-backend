@@ -11,18 +11,31 @@ const UserModel = require("../models/users.js");
 // ROUTES
 //======================
 
+//======================
+// READ - Get (all users)
+//=======================
+
 router.get("/", async (req, res) => {
   const allUsers = await UserModel.find({});
   res.json(allUsers);
 });
 
-// Get 'create new account' form
-router.get("/new", (req, res) => {
-  res.redirect("http://localhost:3000/register");
+
+//======================
+// READ - Get (user profile of current user)
+//=======================
+
+router.get("/:username", async (req, res) => {
+  const foundUser = await UserModel.findOne({ username: req.params.username });
+  res.json(foundUser);
 });
 
-// Post - Create new account using form input
+//======================
+// CREATE - Post (new account using form input)
+//=======================
+
 router.post("/new", async (req, res) => {
+  const formInput = req.body;
   const username = req.body.username;
   const password = req.body.password;
 
@@ -38,7 +51,7 @@ router.post("/new", async (req, res) => {
     return;
   } else {
     const hashPassword = await bcrypt.hash(password, 12);
-    await UserModel.create({ username: username, password: hashPassword });
+    await UserModel.create({ ...formInput, password: hashPassword });
     res.json(
       `New user created! username: ${username} | password: ${password} | hash: ${hashPassword}`
     );
