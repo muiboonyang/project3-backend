@@ -8,7 +8,6 @@ module.exports = [
     address: "Sin Ming",
     unit: "11-11",
     zipcode: "556677",
-    reviews: [{}],
   },
   {
     username: "jengmun",
@@ -19,7 +18,6 @@ module.exports = [
     address: "Jurong",
     unit: "10-01",
     zipcode: "901132",
-    reviews: [{}],
   },
   {
     username: "clement",
@@ -30,7 +28,6 @@ module.exports = [
     address: "Clementi",
     unit: "11-32",
     zipcode: "123456",
-    reviews: [{}],
   },
   {
     username: "alex",
@@ -41,7 +38,6 @@ module.exports = [
     address: "Singapore",
     unit: "11-11",
     zipcode: "556677",
-    reviews: [{}],
   },
   {
     username: "weijie",
@@ -52,6 +48,5 @@ module.exports = [
     address: "Singapore",
     unit: "11-11",
     zipcode: "556677",
-    reviews: [{}],
   },
 ];
