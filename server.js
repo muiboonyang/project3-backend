@@ -9,6 +9,7 @@ const session = require("express-session");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const multer = require("multer");
+const dotenv = require("dotenv");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -21,9 +22,10 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Config
-const mongoURI = `mongodb+srv://muiboonyang:8MzHm$g!He76$R3@cluster0.j3waq.mongodb.net/Cluster0?retryWrites=true&w=majority`;
-connectDB(mongoURI);
+dotenv.config();
+const mongoURI = process.env.MONGO_URI;
 // const mongoURI = "mongodb://localhost:27017/project3";
+connectDB(mongoURI);
 
 const app = express();
 
