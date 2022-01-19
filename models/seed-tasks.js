@@ -16,7 +16,7 @@ module.exports = [
     completed: true,
     acceptedBy: "jengmun",
     image: "https://picsum.photos/id/1026/4621/3070",
-    review: "Very helpful!",
+    review: "",
   },
   {
     username: "jengmun",
