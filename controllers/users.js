@@ -63,8 +63,8 @@ router.post("/new", async (req, res) => {
 
 router.post("/:username/update", async (req, res) => {
   const formInput = req.body;
-  // const username = req.body.username;
   const password = req.body.password;
+  // const username = req.body.username;
 
   // const existingUsername = await UserModel.find({ username: username });
 
@@ -77,16 +77,15 @@ router.post("/:username/update", async (req, res) => {
   const hashPassword = await bcrypt.hash(password, 12);
   await UserModel.findOneAndUpdate(
     { username: req.params.username },
-    { ...formInput, password: hashPassword },
-    { new: true },
-    (err) => {
-      if (err) {
-        res.status(403).json(`Failed to update profile.`);
-        return;
-      } else {
-        res.json(`Profile updated successfully!`);
-      }
-    }
+    { ...formInput, password: hashPassword }
+    // (err) => {
+    //   if (err) {
+    //     res.status(403).json(`Failed to update profile.`);
+    //     return;
+    //   } else {
+    //     res.json(`Profile updated successfully!`);
+    //   }
+    // }
   );
   // }
 });
