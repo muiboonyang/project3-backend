@@ -14,7 +14,7 @@ module.exports = [
     comments: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer non dolor quam. Integer imperdiet est magna, non pulvinar quam ornare vitae. Duis varius orci quis risus gravida, id maximus augue egestas. Morbi gravida placerat maximus. In vel lacus a lectus pellentesque sagittis. Aenean id efficitur ligula. Suspendisse nunc libero, sodales in nisl eu, dictum vehicula libero. Fusce euismod vulputate risus vitae tempor. Vivamus consequat posuere nulla ac pellentesque.`,
     accepted: true,
     completed: true,
-    acceptedBy: "2",
+    acceptedBy: "jengmun",
     image: "https://picsum.photos/id/1026/4621/3070",
     review: "Very helpful!",
   },
