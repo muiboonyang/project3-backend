@@ -32,7 +32,7 @@ module.exports = [
   {
     username: "4",
     password: "4",
-    name: "Ernest",
+    name: "Alex",
     email: "ernest@outlook.sg",
     contact: "123456",
     address: "Sin Ming",
@@ -42,7 +42,7 @@ module.exports = [
   {
     username: "5",
     password: "5",
-    name: "Ernest",
+    name: "Wei Jie",
     email: "ernest@outlook.sg",
     contact: "123456",
     address: "Sin Ming",
