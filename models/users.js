@@ -16,8 +16,7 @@ const UserSchema = new mongoose.Schema(
     zipcode: { type: String, required: true },
     reviews: [{}],
   },
-  { timestamps: true },
-  { collection: "users" }
+  { timestamps: true, collection: "users" }
 );
 
 const UserModel = mongoose.model("UserModel", UserSchema);
